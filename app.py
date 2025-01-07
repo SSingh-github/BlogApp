@@ -92,6 +92,24 @@ def get_article(id):
             return 'Nothing found'
     else:
         return '{} is not supported for this url path'.format(request.method)
+    
+@app.route('/articles_filtered', methods=['GET'])
+def get_articles_by_filtering():
+    if request.method == 'GET':
+        data = request.json
+        hashtag = data['hashtag']
+        date = data['publishing_date']
+
+        for article in articles:
+            if hashtag in article['hashtags']:
+                return jsonify(article)
+            elif date == article['date_of_publishing']:
+                return jsonify(article)
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
