@@ -106,8 +106,35 @@ def get_articles_by_filtering():
             elif date == article['date_of_publishing']:
                 return jsonify(article)
 
+@app.route('/create', methods=['POST'])
+def create_article():
+    """
+    "id": 1,
+        "author": "John Doe",
+        "date_of_publishing": "2025-01-05",
+        "hashtags": [
+            "#tech",
+            "#python",
+            "#programming"
+        ],
+        "content": "This is a dummy article about programming and Python. It covers basic concepts and features."
+    """
+    if request.method =='POST':
+        data = request.json
+        author = data['author']
+        date = data['date_of_publishing']
+        hashtags = data['hashtags']
+        content = data['content']
 
-
+        article = {
+            "id": len(articles) + 1,
+            "author": author,
+            "date_of_publishing": date,
+            "hashtags": hashtags,
+            "content": content
+        }
+        articles.append(article)
+        return jsonify(articles[len(articles) -1])
 
 
 
