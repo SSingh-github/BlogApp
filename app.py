@@ -136,7 +136,27 @@ def create_article():
         articles.append(article)
         return jsonify(articles[len(articles) -1])
 
+@app.route('/delete/<int:id>', methods=['DELETE'])
+def delete_article(id):
+    if request.method =='DELETE':
+        for article in articles:
+            if article['id'] == id:
+                articles.remove(article)
+                return jsonify(article)
+    else:
+        return "not a valid method"
+    
 
+@app.route('/update/<int:id>', methods=['PUT'])
+def update_article(id):
+    if request.method == 'PUT':
+        for article in articles:
+            if article['id'] == id:
+                data = request.json
+                article['author'] = data['author']
+                return jsonify(article)
+            else:
+                return "no article with given id"
 
 if __name__ == '__main__':
     app.run(debug=True)
