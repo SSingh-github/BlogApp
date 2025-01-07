@@ -80,6 +80,18 @@ def get_all_articles():
     else:
         return '{} is not supported for this url path'.format(request.method)
 
+@app.route('/articles/<int:id>', methods=['GET'])
+def get_article(id):
+    if request.method == 'GET':
+        if len(articles) > 0:
+            for article in articles:
+                if article['id'] == id:
+                    return jsonify(article)
+            return 'No article found with given id'
+        else:
+            return 'Nothing found'
+    else:
+        return '{} is not supported for this url path'.format(request.method)
 
 if __name__ == '__main__':
     app.run(debug=True)
