@@ -14,12 +14,27 @@ load_dotenv()
 
 def get_db_connection():
     return pymysql.connect(
-        host=os.getenv(Env_variables.db_hostname),
-        user=os.getenv(Env_variables.db_username),
-        password=os.getenv(Env_variables.db_password),
-        database=os.getenv(Env_variables.db_name),
+        host=os.getenv(Env_variables.db_hostname.value),
+        user=os.getenv(Env_variables.db_username.value),
+        password=os.getenv(Env_variables.db_password.value),
+        database=os.getenv(Env_variables.db_name.value),
+        charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )
+
+#create the articles table here
+conn = get_db_connection()
+cursor = conn.cursor()
+create_table_query = """CREATE TABLE articles (
+    id INT AUTO_INCREMENT PRIMARY KEY,               
+    author VARCHAR(255) NOT NULL,                    
+    date_of_publishing DATE NOT NULL,                
+    hashtags TEXT,                                   
+    content TEXT NOT NULL                             
+);"""
+
+cursor.execute(create_table_query)
+conn.close()
 
 def init_db(app):
     # This can include setup logic or migrations if needed
@@ -27,11 +42,14 @@ def init_db(app):
 
 """
 
-1. for production grade applications, when they run, which file is run first in flask? and how?
-2. how to manage the tokens and credentials in the app code in production grade applications?
-3. for production grade applications, how the db tables are created, manually on the admin panel or in the code?
-4. if in the code, then how and where? how to structure the code?
-5. how to use breakpoints in vscode? and how to check the values of variables at the breakpoint and how to execute expressions?
-6. what is mysql? and how is it used with flask in production grade applications, which package and how the code is structured?
+for production grade applications, how the db tables are created, manually on the admin panel or in the code?
+if in the code, then how and where? how to structure the code?
+what is mysql? and how is it used with flask in production grade applications, which package and how the code is structured?
 
+
+changes needed:
+1. handle all the status codes for each api and integrate the database
+2. write production quality code by dividing it into required files
+3. comment the code
+4. write test cases
 """
