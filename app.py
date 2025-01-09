@@ -62,12 +62,9 @@ articles = [
 ]
 
 
-# routes can be: get api to fetch all the articles
-# get api to fetch the articles with given hashtag or publishing date
-# get api to fetch the article with a particular id
-# post api to create an article with given details
-# delete an article with given id
-# update an article with given id and details 
+#improve these apis by using better suggestions 
+#after that integrate database into it
+#after that write unit tests to test these apis
 
 
 @app.route('/articles', methods=['GET'])
