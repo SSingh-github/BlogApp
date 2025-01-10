@@ -14,10 +14,10 @@ load_dotenv()
 
 def get_db_connection():
     return pymysql.connect(
-        host='localhost',#os.getenv(Env_variables.db_hostname.value),
-        user='root',#os.getenv(Env_variables.db_username.value),
-        password='myssinghdbms',#os.getenv(Env_variables.db_password.value),
-        database='blog_db',#os.getenv(Env_variables.db_name.value),
+        host='localhost',
+        user='root',
+        password='myssinghdbms',
+        database='blog_db',
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )

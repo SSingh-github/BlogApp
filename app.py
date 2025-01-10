@@ -69,7 +69,6 @@ def get_article(id):
         except Exception as e:
             return jsonify({"error": str(e)}), 500  # Internal Server Error
 
-    
 @app.route('/articles_filtered', methods=['GET'])
 def get_articles_by_filtering():
     """
@@ -82,17 +81,18 @@ def get_articles_by_filtering():
             hashtag = data.get('hashtag')
             date = data.get('publishing_date')
 
-            # Build the base query and filters
+            # Build the base query
+            query = "SELECT * FROM articles"
             filters = []
-            query = "SELECT * FROM articles WHERE"
 
             if hashtag:
                 filters.append("hashtags LIKE %s")
             if date:
                 filters.append("date_of_publishing = %s")
 
-            # Join filters with AND
-            query += " AND ".join(filters)
+            # Add filters to query if they exist
+            if filters:
+                query += " WHERE " + " AND ".join(filters)
 
             # Prepare query parameters
             params = []
@@ -121,7 +121,7 @@ def get_articles_by_filtering():
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500  # Internal Server Error
-            
+
 @app.route('/create', methods=['POST'])
 def create_article():
     """
@@ -207,7 +207,8 @@ def delete_article(id):
         except Exception as e:
             return jsonify({"error": str(e)}), 500  # Internal Server Error
 
-    
+from datetime import datetime
+
 @app.route('/update/<int:id>', methods=['PUT'])
 def update_article(id):
     """
@@ -218,9 +219,18 @@ def update_article(id):
             # Parse request data
             data = request.json
             author = data.get('author')
-            date = data.get('date_of_publishing')
+            date_str = data.get('date_of_publishing')
             hashtags = ','.join(data.get('hashtags', []))  # Convert list to string if provided
             content = data.get('content')
+
+            # Convert date string to MySQL-compatible format
+            date = None
+            if date_str:
+                try:
+                    date_obj = datetime.strptime(date_str, "%a, %d %b %Y %H:%M:%S %Z")  # RFC 1123 format
+                    date = date_obj.strftime("%Y-%m-%d")  # MySQL DATE format
+                except ValueError:
+                    return jsonify({"error": "Invalid date format"}), 400  # 400 Bad Request
 
             # Connect to the database
             conn = get_db_connection()
@@ -257,7 +267,6 @@ def update_article(id):
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500  # Internal Server Error
-
 
 if __name__ == '__main__':
     app.run(debug=True)
